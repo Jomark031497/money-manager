@@ -9,12 +9,15 @@ export const createUser = async (payload: InferInsertModel<typeof users>) => {
   if (emailResults.length) throw new AppError(400, 'email is already taken.');
 
   const hashedPassword = await hash(payload.password);
-  await db.insert(users).values({
-    ...payload,
-    password: hashedPassword,
-  });
+  const results = await db
+    .insert(users)
+    .values({
+      ...payload,
+      password: hashedPassword,
+    })
+    .returning();
 
-  return { message: 'user created' };
+  return results[0];
 };
 
 export const getUsers = async () => {
@@ -30,7 +33,7 @@ export const getUsers = async () => {
   return results;
 };
 
-export const getUserById = async (id: string) => {
+export const getUserById = async (id: string, includePassword: boolean = true) => {
   const results = await db
     .select({
       id: users.id,
@@ -38,9 +41,18 @@ export const getUserById = async (id: string) => {
       fullName: users.fullName,
       createdAt: users.createdAt,
       updatedAt: users.updatedAt,
+      ...(includePassword && {
+        password: users.password,
+      }),
     })
     .from(users)
     .where(eq(users.id, id));
+
+  return results[0];
+};
+
+export const getUserByEmail = async (email: string) => {
+  const results = await db.select().from(users).where(eq(users.email, email));
 
   return results[0];
 };

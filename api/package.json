@@ -27,6 +27,7 @@
     "typescript": "^5.4.3"
   },
   "dependencies": {
+    "@lucia-auth/adapter-drizzle": "^1.0.7",
     "argon2": "^0.40.1",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
@@ -34,7 +35,9 @@
     "drizzle-orm": "^0.30.4",
     "drizzle-zod": "^0.5.1",
     "express": "^4.19.1",
+    "lucia": "^3.1.1",
     "nanoid": "^5.0.6",
+    "oslo": "^1.2.0",
     "pg": "^8.11.3",
     "pino": "^8.19.0",
     "pino-pretty": "^11.0.0",

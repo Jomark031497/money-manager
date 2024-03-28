@@ -1,5 +1,7 @@
 import { ReactNode, createContext, useEffect, useState } from 'react';
 import { AuthSchemaType } from '../features/auth/auth.schema';
+import { getCurrentAuthenticatedUser } from '../features/auth/api/getCurrentAuthenticatedUser';
+import { signOutUser } from '../features/auth/api/signOutUser';
 
 type UserType = {
   id: string;
@@ -12,6 +14,7 @@ type LoginInputsType = Pick<AuthSchemaType, 'email' | 'password'>;
 interface AuthContextType {
   user: UserType | null;
   handleLogin: (credentials: LoginInputsType) => Promise<void>;
+  handleSignOut: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -22,8 +25,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
 
   const handleLogin = async (credentials: LoginInputsType) => {
-    console.log('loginerist');
-
     try {
       const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/auth/login`, {
         method: 'POST',
@@ -35,6 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
 
       const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
       setUser(data);
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
@@ -42,12 +44,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOutUser();
+      window.location.reload();
+    } catch (error) {
+      if (error instanceof Error) throw new Error(error.message);
+      throw new Error('Something went wrong');
+    }
+  };
+
   useEffect(() => {
-    const checkSession = () => {
+    const checkSession = async () => {
       try {
-        console.log('try');
+        const user = await getCurrentAuthenticatedUser();
+        setUser(user);
       } catch (error) {
-        console.log('error');
+        console.log(error);
       } finally {
         setIsLoading(false);
       }
@@ -56,5 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkSession();
   }, []);
 
-  return <AuthContext.Provider value={{ user, handleLogin }}>{!isLoading && children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, handleLogin, handleSignOut }}>{!isLoading && children}</AuthContext.Provider>
+  );
 };

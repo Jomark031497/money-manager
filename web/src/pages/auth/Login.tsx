@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '../../components/ui/Input';
 import { FaGoogle } from 'react-icons/fa';
 import { Button } from '../../components/ui/Button';
@@ -15,6 +15,8 @@ const loginSchema = authSchema.pick({
 type LoginInputsType = Pick<AuthSchemaType, 'email' | 'password'>;
 
 export const Login = () => {
+  const navigate = useNavigate();
+
   const { handleLogin } = useAuth();
 
   const {
@@ -28,6 +30,7 @@ export const Login = () => {
   const onSubmit: SubmitHandler<LoginInputsType> = async (values) => {
     try {
       await handleLogin(values);
+      navigate('/');
     } catch (error) {
       console.error(error);
     }
