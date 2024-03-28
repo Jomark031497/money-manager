@@ -1,7 +1,9 @@
 import { ReactNode, createContext, useEffect, useState } from 'react';
-import { AuthSchemaType } from '../features/auth/auth.schema';
 import { getCurrentAuthenticatedUser } from '../features/auth/api/getCurrentAuthenticatedUser';
 import { signOutUser } from '../features/auth/api/signOutUser';
+import { loginUser } from '../features/auth/api/loginUser';
+import { LoginInputsType, SignUpInputsType } from '../features/auth/auth.schema';
+import { signUpUser } from '../features/auth/api/signUpUser';
 
 type UserType = {
   id: string;
@@ -9,11 +11,10 @@ type UserType = {
   fullName?: string;
 };
 
-type LoginInputsType = Pick<AuthSchemaType, 'email' | 'password'>;
-
 interface AuthContextType {
   user: UserType | null;
   handleLogin: (credentials: LoginInputsType) => Promise<void>;
+  handleSignUp: (credentials: SignUpInputsType) => Promise<void>;
   handleSignOut: () => Promise<void>;
 }
 
@@ -26,17 +27,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const handleLogin = async (credentials: LoginInputsType) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/auth/login`, {
-        method: 'POST',
-        body: JSON.stringify(credentials),
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const data = await loginUser(credentials);
+      setUser(data);
+    } catch (error) {
+      if (error instanceof Error) throw new Error(error.message);
+      throw new Error('Something went wrong');
+    }
+  };
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message);
+  const handleSignUp = async (payload: SignUpInputsType) => {
+    try {
+      const data = await signUpUser(payload);
       setUser(data);
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
@@ -70,6 +71,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, handleLogin, handleSignOut }}>{!isLoading && children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, handleLogin, handleSignOut, handleSignUp }}>
+      {!isLoading && children}
+    </AuthContext.Provider>
   );
 };

@@ -11,19 +11,25 @@ export const signUp = async (payload: InferInsertModel<typeof users>) => {
 
   const session = await lucia.createSession(user.id, {});
 
-  return session;
+  return {
+    session,
+    user,
+  };
 };
 
 export const login = async (payload: Pick<InferSelectModel<typeof users>, 'email' | 'password'>) => {
-  const user = await getUserByEmail(payload.email);
-  if (!user) throw new AppError(404, 'invalid email/password');
+  const user = await getUserByEmail(payload.email, true);
+  if (!user || !user.password) throw new AppError(404, 'invalid email/password');
 
   const validPassword = await verify(user.password, payload.password);
   if (!validPassword) throw new AppError(404, 'invalid email/password');
 
   const session = await lucia.createSession(user.id, {});
 
-  return session;
+  return {
+    session,
+    user,
+  };
 };
 
 export const signOut = async (sessionId: string) => {

@@ -1,18 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '../../components/ui/Input';
-import { FaGoogle } from 'react-icons/fa';
+// import { FaGoogle } from 'react-icons/fa';
 import { Button } from '../../components/ui/Button';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { AuthSchemaType, authSchema } from '../../features/auth/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../../features/auth/hooks/useAuth';
-
-const loginSchema = authSchema.pick({
-  email: true,
-  password: true,
-});
-
-type LoginInputsType = Pick<AuthSchemaType, 'email' | 'password'>;
+import { LoginInputsType, LoginSchema } from '../../features/auth/auth.schema';
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -22,9 +15,10 @@ export const Login = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginInputsType>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(LoginSchema),
   });
 
   const onSubmit: SubmitHandler<LoginInputsType> = async (values) => {
@@ -32,7 +26,14 @@ export const Login = () => {
       await handleLogin(values);
       navigate('/');
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) {
+        setError('email', {
+          message: error.message,
+        });
+        setError('password', {
+          message: error.message,
+        });
+      }
     }
   };
 
@@ -47,19 +48,19 @@ export const Login = () => {
         </p>
 
         <div>
-          <Input label="Email" {...register('email')} />
+          <Input label="Email *" {...register('email')} error={!!errors.email} />
           {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
         </div>
 
         <div>
-          <Input label="Password" type="password" {...register('password')} />
+          <Input label="Password *" type="password" {...register('password')} error={!!errors.password} />
           {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
         </div>
 
         <div>
           <Link to="/auth/forgot" className="text-blue-500">
             Forgot Password?
-          </Link>
+          </Link>{' '}
         </div>
 
         <Button type="submit" className="w-64 self-center">
@@ -73,7 +74,7 @@ export const Login = () => {
           </Link>
         </p>
 
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <hr className="flex-1" />
           <p>or</p>
           <hr className="flex-1" />
@@ -86,7 +87,7 @@ export const Login = () => {
           >
             <FaGoogle /> Login with Google
           </Button>
-        </div>
+        </div> */}
       </form>
     </main>
   );

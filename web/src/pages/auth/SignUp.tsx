@@ -1,18 +1,15 @@
-import { Link } from "react-router-dom";
-import { Input } from "../../components/ui/Input";
-import { FaGoogle } from "react-icons/fa";
-import { Button } from "../../components/ui/Button";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { AuthSchemaType, authSchema } from "../../features/auth/auth.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-const signUpSchema = authSchema.omit({
-  id: true,
-});
-
-type SignUpInputsType = Omit<AuthSchemaType, "id">;
+import { Input } from '../../components/ui/Input';
+import { Button } from '../../components/ui/Button';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Link, useNavigate } from 'react-router-dom';
+import { SignUpInputsType, signUpSchema } from '../../features/auth/auth.schema';
+import { useAuth } from '../../features/auth/hooks/useAuth';
 
 export const SignUp = () => {
+  const navigate = useNavigate();
+  const { handleSignUp } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -21,8 +18,13 @@ export const SignUp = () => {
     resolver: zodResolver(signUpSchema),
   });
 
-  const onSubmit: SubmitHandler<SignUpInputsType> = (values) => {
-    console.log(values);
+  const onSubmit: SubmitHandler<SignUpInputsType> = async (values) => {
+    try {
+      await handleSignUp(values);
+      navigate('/');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -36,43 +38,30 @@ export const SignUp = () => {
         </p>
 
         <div>
-          <Input label="Username" {...register("username")} />
-          {errors.username && (
-            <p className="text-sm text-red-500">{errors.username.message}</p>
-          )}
+          <Input label="Full Name" {...register('email')} error={!!errors.fullName} />
+          {errors.fullName && <p className="text-sm text-red-500">{errors.fullName.message}</p>}
         </div>
 
         <div>
-          <Input label="Password" {...register("password")} />
-          {errors.username && (
-            <p className="text-sm text-red-500">{errors.username.message}</p>
-          )}
+          <Input label="Email *" {...register('email')} error={!!errors.email} />
+          {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
         </div>
 
         <div>
-          <Link to="/auth/forgot" className="text-blue-500">
-            Forgot Password?
-          </Link>
+          <Input label="Password *" type="password" {...register('password')} error={!!errors.password} />
+          {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
         </div>
 
         <Button type="submit" className="w-64 self-center">
-          Login
+          Sign Up
         </Button>
 
-        <div className="flex items-center gap-2">
-          <hr className="flex-1" />
-          <p>or</p>
-          <hr className="flex-1" />
-        </div>
-
-        <div className="flex flex-col p-4">
-          <Button
-            type="button"
-            className="flex items-center justify-center gap-2 border-2 border-accent bg-primary text-accent hover:bg-accent hover:text-black"
-          >
-            <FaGoogle /> Login with Google
-          </Button>
-        </div>
+        <p className="my-2 text-center text-sm text-gray-500">
+          already have an account?{' '}
+          <Link to="/auth/login" className="text-blue-500">
+            login
+          </Link>
+        </p>
       </form>
     </main>
   );

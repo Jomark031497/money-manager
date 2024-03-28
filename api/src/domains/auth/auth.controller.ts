@@ -5,11 +5,10 @@ import { NextFunction, Request, Response } from 'express';
 export const signUpHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = await signUp(req.body);
-
     return res
-      .appendHeader('Set-Cookie', lucia.createSessionCookie(data.id).serialize())
+      .appendHeader('Set-Cookie', lucia.createSessionCookie(data.session.id).serialize())
       .status(200)
-      .json({ message: 'sign-up success' })
+      .json(data.user)
       .end();
   } catch (error) {
     return next(error);
@@ -20,11 +19,9 @@ export const loginHandler = async (req: Request, res: Response, next: NextFuncti
   try {
     const data = await login(req.body);
     return res
-      .appendHeader('Set-Cookie', lucia.createSessionCookie(data.id).serialize())
+      .appendHeader('Set-Cookie', lucia.createSessionCookie(data.session.id).serialize())
       .status(200)
-      .json({
-        message: 'login success',
-      })
+      .json(data.user)
       .end();
   } catch (error) {
     return next(error);

@@ -33,7 +33,7 @@ export const getUsers = async () => {
   return results;
 };
 
-export const getUserById = async (id: string, includePassword: boolean = true) => {
+export const getUserById = async (id: string, includePassword: boolean = false) => {
   const results = await db
     .select({
       id: users.id,
@@ -51,8 +51,20 @@ export const getUserById = async (id: string, includePassword: boolean = true) =
   return results[0];
 };
 
-export const getUserByEmail = async (email: string) => {
-  const results = await db.select().from(users).where(eq(users.email, email));
+export const getUserByEmail = async (email: string, includePassword: boolean = false) => {
+  const results = await db
+    .select({
+      id: users.id,
+      email: users.email,
+      fullName: users.fullName,
+      createdAt: users.createdAt,
+      updatedAt: users.updatedAt,
+      ...(includePassword && {
+        password: users.password,
+      }),
+    })
+    .from(users)
+    .where(eq(users.email, email));
 
   return results[0];
 };
