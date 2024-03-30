@@ -23,14 +23,3 @@ export const usersRelations = relations(users, ({ many }) => ({
 export const insertUserSchema = createInsertSchema(users);
 
 export const selectUserSchema = createSelectSchema(users);
-
-export const sessionTable = pgTable('session', {
-  id: text('id').primaryKey(),
-  userId: text('user_id')
-    .notNull()
-    .references(() => users.id),
-  expiresAt: timestamp('expires_at', {
-    withTimezone: true,
-    mode: 'date',
-  }).notNull(),
-});
