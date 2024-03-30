@@ -2,19 +2,48 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "target": "es2022",
+    "target": "ESNext",
     "allowJs": true,
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "moduleResolution": "NodeNext",
-    "module": "NodeNext",
+    "moduleResolution": "Node",
+    "module": "ESNext",
     "outDir": "dist",
     "sourceMap": true,
     "lib": ["es2022"]
   },
   "exclude": ["node_modules"],
-  "include": ["src/**/*", "drizzle.config.ts"]
+  "include": ["src/**/*"]
 }
+
+// {
+//   "compilerOptions": {
+//     "target": "ESNext",
+//     "module": "commonjs",
+//     "lib": ["dom", "es6", "es2017", "esnext.asynciterable"],
+//     "skipLibCheck": true,
+//     "sourceMap": true,
+//     "outDir": "./dist",
+//     "moduleResolution": "node",
+//     "removeComments": true,
+//     "noImplicitAny": true,
+//     "strictNullChecks": true,
+//     "strictFunctionTypes": true,
+//     "noImplicitThis": true,
+//     "noUnusedLocals": true,
+//     "noUnusedParameters": true,
+//     "noImplicitReturns": true,
+//     "noFallthroughCasesInSwitch": true,
+//     "allowSyntheticDefaultImports": true,
+//     "esModuleInterop": true,
+//     "emitDecoratorMetadata": true,
+//     "experimentalDecorators": true,
+//     "resolveJsonModule": true,
+//     "typeRoots": ["./src/types", "./node_modules/@types"]
+//   },
+//   "exclude": ["node_modules"],
+//   "include": ["./src/**/*.ts"]
+// }

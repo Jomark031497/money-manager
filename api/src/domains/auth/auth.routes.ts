@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { validateSchema } from '../../middlewares/validateSchema.js';
-import { insertUserSchema, selectUserSchema } from '../users/users.schema.js';
-import { currentSessionHandler, loginHandler, signOutHandler, signUpHandler } from './auth.controller.js';
-import { validateSession } from '../../middlewares/validateSession.js';
+import { validateSchema } from '../../middlewares/validateSchema';
+import { insertUserSchema, selectUserSchema } from '../users/users.schema';
+import { currentSessionHandler, loginHandler, signOutHandler, signUpHandler } from './auth.controller';
+import { validateSession } from '../../middlewares/validateSession';
 
 const router = Router();
 

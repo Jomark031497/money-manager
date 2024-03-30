@@ -6,9 +6,11 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../../features/auth/hooks/useAuth';
 import { LoginInputsType, LoginSchema } from '../../features/auth/auth.schema';
+import { usePageTitle } from '../../features/utils/hooks/usePageTitle';
 
 export const Login = () => {
   const navigate = useNavigate();
+  usePageTitle('login | hello.friend');
 
   const { handleLogin } = useAuth();
 
@@ -41,7 +43,7 @@ export const Login = () => {
     <main className="flex h-screen items-center justify-center shadow">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex max-w-md flex-1 flex-col gap-4 rounded border-2 px-4 py-8"
+        className="flex max-w-md flex-1 flex-col gap-4 rounded border-2 px-4 py-8 shadow"
       >
         <p className="text-center text-4xl tracking-wider">
           hello.<span className="font-bold text-secondary">friend</span>

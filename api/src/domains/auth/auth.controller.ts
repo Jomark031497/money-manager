@@ -1,5 +1,5 @@
-import { getCurrentAuthenticatedUser, login, signOut, signUp } from './auth.service.js';
-import { lucia } from '../../lib/lucia.js';
+import { getCurrentAuthenticatedUser, login, signOut, signUp } from './auth.service';
+import { lucia } from '../../lib/lucia';
 import { NextFunction, Request, Response } from 'express';
 
 export const signUpHandler = async (req: Request, res: Response, next: NextFunction) => {

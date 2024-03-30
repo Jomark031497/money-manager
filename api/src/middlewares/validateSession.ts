@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { lucia } from '../lib/lucia.js';
+import { lucia } from '../lib/lucia';
 
 export const validateSession = async (req: Request, res: Response, next: NextFunction) => {
   const sessionId = lucia.readSessionCookie(req.headers.cookie ?? '');

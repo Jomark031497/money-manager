@@ -1,5 +1,5 @@
-import { asyncHandler } from '../../utils/asyncHandler.js';
-import { createUser, deleteUser, getUserById, getUsers, updateUser } from './users.service.js';
+import { asyncHandler } from '../../utils/asyncHandler';
+import { createUser, deleteUser, getUserById, getUsers, updateUser } from './users.service';
 
 export const createUserHandler = asyncHandler(async (req) => {
   const data = await createUser(req.body);

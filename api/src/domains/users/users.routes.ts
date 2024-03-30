@@ -5,9 +5,9 @@ import {
   getUserbyIdHandler,
   getUsersHandler,
   updateUserHandler,
-} from './users.controller.js';
-import { validateSchema } from '../../middlewares/validateSchema.js';
-import { insertUserSchema } from './users.schema.js';
+} from './users.controller';
+import { validateSchema } from '../../middlewares/validateSchema';
+import { insertUserSchema } from './users.schema';
 
 const router = Router();
 

@@ -1,8 +1,8 @@
 import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
-import { createUser, getUserByEmail, getUserById } from '../users/users.service.js';
-import { users } from '../users/users.schema.js';
-import { lucia } from '../../lib/lucia.js';
-import { AppError } from '../../utils/AppError.js';
+import { createUser, getUserByEmail, getUserById } from '../users/users.service';
+import { users } from '../users/users.schema';
+import { lucia } from '../../lib/lucia';
+import { AppError } from '../../utils/AppError';
 import { verify } from 'argon2';
 
 export const signUp = async (payload: InferInsertModel<typeof users>) => {

@@ -1,7 +1,7 @@
 import { Lucia } from 'lucia';
 import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle';
-import { db } from '../db/index.js';
-import { sessionTable, users } from '../domains/users/users.schema.js';
+import { db } from '../db';
+import { sessionTable, users } from '../domains/users/users.schema';
 
 const adapter = new DrizzlePostgreSQLAdapter(db, sessionTable, users);
 

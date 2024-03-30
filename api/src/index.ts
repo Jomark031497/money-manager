@@ -1,13 +1,14 @@
 import express from 'express';
-import { logger } from './utils/logger.js';
+import { logger } from './utils/logger';
 import cors from 'cors';
 import { createServer } from 'http';
-import { errorHandler } from './middlewares/errorHandler.js';
-import { routes } from './routes.js';
+import { errorHandler } from './middlewares/errorHandler';
+import { routes } from './routes';
 
 async function main() {
   const app = express();
   const server = createServer(app);
+
   const PORT = process.env.PORT;
 
   app.use(

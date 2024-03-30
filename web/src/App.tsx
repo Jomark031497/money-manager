@@ -6,6 +6,7 @@ import { SignUp } from './pages/auth/SignUp';
 import { ForgotPassword } from './pages/auth/ForgotPassword';
 import { ProtectedRoute } from './features/utils/components/ProtectedRoute';
 import { AuthRoute } from './features/utils/components/AuthRoute';
+import { Profile } from './pages/Profile';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Dashboard />,
+          },
+          {
+            path: 'profile',
+            element: <Profile />,
           },
         ],
       },

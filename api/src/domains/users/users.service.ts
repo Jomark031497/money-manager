@@ -1,7 +1,7 @@
 import { InferInsertModel, eq } from 'drizzle-orm';
-import { users } from './users.schema.js';
-import { db } from '../../db/index.js';
-import { AppError } from '../../utils/AppError.js';
+import { users } from './users.schema';
+import { db } from '../../db/index';
+import { AppError } from '../../utils/AppError';
 import { hash } from 'argon2';
 
 export const createUser = async (payload: InferInsertModel<typeof users>) => {
