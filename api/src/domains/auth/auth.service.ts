@@ -1,5 +1,5 @@
 import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
-import { createUser, getUserByEmail, getUserById } from '../users/users.service';
+import { createUser, getUserById, getUserByUsername } from '../users/users.service';
 import { users } from '../users/users.schema';
 import { lucia } from '../../lib/lucia';
 import { AppError } from '../../utils/AppError';
@@ -17,12 +17,12 @@ export const signUp = async (payload: InferInsertModel<typeof users>) => {
   };
 };
 
-export const login = async (payload: Pick<InferSelectModel<typeof users>, 'email' | 'password'>) => {
-  const user = await getUserByEmail(payload.email, true);
-  if (!user || !user.password) throw new AppError(404, 'invalid email/password');
+export const login = async (payload: Pick<InferSelectModel<typeof users>, 'username' | 'password'>) => {
+  const user = await getUserByUsername(payload.username, true);
+  if (!user || !user.password) throw new AppError(404, 'invalid username/password');
 
   const validPassword = await verify(user.password, payload.password);
-  if (!validPassword) throw new AppError(404, 'invalid email/password');
+  if (!validPassword) throw new AppError(404, 'invalid username/password');
 
   const session = await lucia.createSession(user.id, {});
 

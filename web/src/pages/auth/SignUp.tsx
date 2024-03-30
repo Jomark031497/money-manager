@@ -40,17 +40,17 @@ export const SignUp = () => {
         </p>
 
         <div>
-          <Input label="Full Name" {...register('email')} error={!!errors.fullName} />
-          {errors.fullName && <p className="text-sm text-red-500">{errors.fullName.message}</p>}
+          <Input label="username *" {...register('username')} error={!!errors.username} />
+          {errors.username && <p className="text-sm text-red-500">{errors.username.message}</p>}
         </div>
 
         <div>
-          <Input label="Email *" {...register('email')} error={!!errors.email} />
+          <Input label="email *" {...register('email')} error={!!errors.email} />
           {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
         </div>
 
         <div>
-          <Input label="Password *" type="password" {...register('password')} error={!!errors.password} />
+          <Input label="password *" type="password" {...register('password')} error={!!errors.password} />
           {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
         </div>
 

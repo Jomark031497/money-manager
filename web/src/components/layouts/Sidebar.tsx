@@ -60,7 +60,7 @@ export const Sidebar = () => {
         </ul>
         <div className="flex h-16 items-center border-t p-4">
           <div className="flex-1">
-            <p className="text-sm">{user?.fullName ?? user?.id}</p>
+            <p className="text-sm">{user?.username}</p>
             <p className="text-sm">{user?.email}</p>
           </div>
 

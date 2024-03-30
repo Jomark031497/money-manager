@@ -25,7 +25,7 @@ export const getUsers = async () => {
     .select({
       id: users.id,
       email: users.email,
-      fullName: users.fullName,
+      username: users.username,
       createdAt: users.createdAt,
       updatedAt: users.updatedAt,
     })
@@ -38,7 +38,7 @@ export const getUserById = async (id: string, includePassword: boolean = false) 
     .select({
       id: users.id,
       email: users.email,
-      fullName: users.fullName,
+      username: users.username,
       createdAt: users.createdAt,
       updatedAt: users.updatedAt,
       ...(includePassword && {
@@ -56,7 +56,7 @@ export const getUserByEmail = async (email: string, includePassword: boolean = f
     .select({
       id: users.id,
       email: users.email,
-      fullName: users.fullName,
+      username: users.username,
       createdAt: users.createdAt,
       updatedAt: users.updatedAt,
       ...(includePassword && {
@@ -65,6 +65,24 @@ export const getUserByEmail = async (email: string, includePassword: boolean = f
     })
     .from(users)
     .where(eq(users.email, email));
+
+  return results[0];
+};
+
+export const getUserByUsername = async (username: string, includePassword: boolean = false) => {
+  const results = await db
+    .select({
+      id: users.id,
+      email: users.email,
+      username: users.username,
+      createdAt: users.createdAt,
+      updatedAt: users.updatedAt,
+      ...(includePassword && {
+        password: users.password,
+      }),
+    })
+    .from(users)
+    .where(eq(users.username, username));
 
   return results[0];
 };

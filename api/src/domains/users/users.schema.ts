@@ -1,4 +1,4 @@
-import { text, pgTable, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, varchar, timestamp } from 'drizzle-orm/pg-core';
 import { nanoid } from 'nanoid';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { relations } from 'drizzle-orm';
@@ -11,7 +11,7 @@ export const users = pgTable('users', {
     .notNull(),
   email: varchar('email').unique().notNull(),
   password: varchar('password').notNull(),
-  fullName: text('full_name'),
+  username: varchar('username').unique().notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

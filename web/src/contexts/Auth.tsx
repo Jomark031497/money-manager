@@ -2,14 +2,8 @@ import { ReactNode, createContext, useEffect, useState } from 'react';
 import { getCurrentAuthenticatedUser } from '../features/auth/api/getCurrentAuthenticatedUser';
 import { signOutUser } from '../features/auth/api/signOutUser';
 import { loginUser } from '../features/auth/api/loginUser';
-import { LoginInputsType, SignUpInputsType } from '../features/auth/auth.schema';
+import { LoginInputsType, SignUpInputsType, UserType } from '../features/auth/auth.schema';
 import { signUpUser } from '../features/auth/api/signUpUser';
-
-type UserType = {
-  id: string;
-  email: string;
-  fullName?: string;
-};
 
 interface AuthContextType {
   user: UserType | null;

@@ -29,7 +29,7 @@ export const Login = () => {
       navigate('/');
     } catch (error) {
       if (error instanceof Error) {
-        setError('email', {
+        setError('username', {
           message: error.message,
         });
         setError('password', {
@@ -50,12 +50,12 @@ export const Login = () => {
         </p>
 
         <div>
-          <Input label="Email *" {...register('email')} error={!!errors.email} />
-          {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+          <Input label="username *" {...register('username')} error={!!errors.username} />
+          {errors.username && <p className="text-sm text-red-500">{errors.username.message}</p>}
         </div>
 
         <div>
-          <Input label="Password *" type="password" {...register('password')} error={!!errors.password} />
+          <Input label="password *" type="password" {...register('password')} error={!!errors.password} />
           {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
         </div>
 

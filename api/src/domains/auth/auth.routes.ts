@@ -12,7 +12,7 @@ router.post(
   '/login',
   validateSchema(
     selectUserSchema.pick({
-      email: true,
+      username: true,
       password: true,
     }),
   ),
