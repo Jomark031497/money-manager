@@ -1,5 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import { Button } from '../components/ui/Button';
+import { Dialog } from '../components/ui/Dialog';
+import { useState } from 'react';
 
 const sampleRooms = [
   {
@@ -29,14 +31,14 @@ const sampleRooms = [
 ];
 
 export const Rooms = () => {
-  const handleCreateRoom = () => {};
+  const [openDialog, setOpenDialog] = useState(false);
 
   return (
     <>
       <div>
         <h1 className="mb-4 text-4xl font-semibold">Room List</h1>
 
-        <Button onClick={handleCreateRoom}>Create Room</Button>
+        <Button onClick={() => setOpenDialog(true)}>Create Room</Button>
 
         <ul className="grid grid-cols-3 gap-2 p-4">
           {sampleRooms.map((room) => (
@@ -50,6 +52,10 @@ export const Rooms = () => {
           ))}
         </ul>
       </div>
+
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        Chewbacca
+      </Dialog>
     </>
   );
 };
