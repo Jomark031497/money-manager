@@ -7,6 +7,7 @@ import { ForgotPassword } from './pages/auth/ForgotPassword';
 import { ProtectedRoute } from './features/utils/components/ProtectedRoute';
 import { AuthRoute } from './features/utils/components/AuthRoute';
 import { Profile } from './pages/Profile';
+import { Rooms } from './pages/Rooms';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
           {
             path: 'profile',
             element: <Profile />,
+          },
+          {
+            path: 'rooms',
+            element: <Rooms />,
           },
         ],
       },

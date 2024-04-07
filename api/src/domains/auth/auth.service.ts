@@ -4,6 +4,7 @@ import { users } from '../users/users.schema';
 import { lucia } from '../../lib/lucia';
 import { AppError } from '../../utils/AppError';
 import { verify } from 'argon2';
+import { excludeFields } from '../../utils/excludeFields';
 
 export const signUp = async (payload: InferInsertModel<typeof users>) => {
   const user = await createUser(payload);
@@ -26,9 +27,13 @@ export const login = async (payload: Pick<InferSelectModel<typeof users>, 'usern
 
   const session = await lucia.createSession(user.id, {});
 
+  // const { password, ...omittedPasswordUser } = user;
+
+  const omittedPasswordUser = excludeFields(user, ['password']);
+
   return {
     session,
-    user,
+    user: omittedPasswordUser,
   };
 };
 

@@ -4,12 +4,39 @@ import { Message } from './Message';
 import { DynamicTextArea } from '../../../components/ui/DynamicTextArea';
 import { MdOutlineEmojiEmotions } from 'react-icons/md';
 import { LuSend } from 'react-icons/lu';
+import { useEffect, useState } from 'react';
+import { socket } from '../../../lib/socket';
 
 interface ChatboxProps {
   messages: MessageType[];
 }
 
+interface Message {
+  content: string;
+}
+
 export const Chatbox = ({ messages }: ChatboxProps) => {
+  const [message, setMessage] = useState('');
+  const [chatHistory, setChatHistory] = useState<Message[]>([]);
+
+  useEffect(() => {
+    const chatMessage = (msg: Message) => {
+      setChatHistory([...chatHistory, msg]);
+    };
+    socket.on('chat_message', chatMessage);
+
+    return () => {
+      socket.off('chat_message', chatMessage);
+    };
+  });
+
+  const sendMessage = () => {
+    if (message) {
+      socket.emit('chat_message', { content: message });
+      setMessage('');
+    }
+  };
+
   return (
     <>
       <div className="grid max-w-4xl grid-cols-6 gap-2 rounded border p-4 shadow">
@@ -21,7 +48,7 @@ export const Chatbox = ({ messages }: ChatboxProps) => {
           ))}
         </ul>
         <div className="col-span-2 rounded border p-4 shadow">
-          <p className="text-lg font-semibold"># malalaki_ang_tite</p>
+          <p className="text-lg font-semibold"># room_shambles</p>
 
           <ul className="flex flex-col gap-1">
             {[
