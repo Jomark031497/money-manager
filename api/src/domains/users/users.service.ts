@@ -6,7 +6,10 @@ import { hash } from 'argon2';
 
 export const createUser = async (payload: InferInsertModel<typeof users>) => {
   const emailResults = await db.select().from(users).where(eq(users.email, payload.email));
-  if (emailResults.length) throw new AppError(400, 'email is already taken.');
+  if (emailResults.length)
+    throw new AppError(400, 'Unable to create user', {
+      email: 'email is already taken',
+    });
 
   const hashedPassword = await hash(payload.password);
   const results = await db

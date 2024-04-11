@@ -27,8 +27,6 @@ export const login = async (payload: Pick<InferSelectModel<typeof users>, 'usern
 
   const session = await lucia.createSession(user.id, {});
 
-  // const { password, ...omittedPasswordUser } = user;
-
   const omittedPasswordUser = excludeFields(user, ['password']);
 
   return {
