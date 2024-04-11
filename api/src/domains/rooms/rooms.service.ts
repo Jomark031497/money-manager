@@ -2,7 +2,6 @@ import { InferInsertModel, eq } from 'drizzle-orm';
 import { rooms } from './rooms.schema';
 import { db } from '../../db';
 import { AppError } from '../../utils/AppError';
-import { hash } from 'argon2';
 
 export const getRoomById = async (id: string) => {
   const results = await db.select().from(rooms).where(eq(rooms.id, id));
@@ -20,7 +19,6 @@ export const getRooms = async () => {
       id: rooms.id,
       name: rooms.name,
       userId: rooms.userId,
-      isPrivate: rooms.isPrivate,
     })
     .from(rooms);
   return results;
@@ -33,24 +31,7 @@ export const createRoom = async (payload: InferInsertModel<typeof rooms>) => {
       name: 'room name is already taken',
     });
 
-  if (payload.isPrivate) {
-    if (!payload.password)
-      throw new AppError(400, 'unable to create room', {
-        password: 'room is private. password is required',
-      });
-  }
-
-  const hashedPassword = payload.password ? await hash(payload.password) : '';
-
-  const results = await db
-    .insert(rooms)
-    .values({
-      ...payload,
-      ...(payload.password && {
-        password: hashedPassword,
-      }),
-    })
-    .returning();
+  const results = await db.insert(rooms).values(payload).returning();
 
   return results[0];
 };
@@ -62,21 +43,11 @@ export const updateRoom = async (id: string, payload: InferInsertModel<typeof ro
       id: 'room id not found',
     });
 
-  if (payload.isPrivate) {
-    if (!payload.password)
-      throw new AppError(400, 'unable to create room', {
-        password: 'room is private. password is required',
-      });
-  }
-
   return await db
     .update(rooms)
     .set({
       ...room,
       ...payload,
-      ...(!payload.isPrivate && {
-        password: null,
-      }),
     })
     .where(eq(rooms.id, id))
     .returning();
