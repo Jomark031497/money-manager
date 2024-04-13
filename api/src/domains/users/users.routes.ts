@@ -1,20 +1,17 @@
 import { Router } from 'express';
-import {
-  createUserHandler,
-  deleteUserHandler,
-  getUserbyIdHandler,
-  getUsersHandler,
-  updateUserHandler,
-} from './users.controller';
+import * as usersController from './users.controller';
 import { validateSchema } from '../../middlewares/validateSchema';
 import { insertUserSchema } from './users.schema';
 
 const router = Router();
 
-router.get('/', getUsersHandler);
-router.get('/:id', getUserbyIdHandler);
-router.post('/', validateSchema(insertUserSchema), createUserHandler);
-router.patch('/:id', updateUserHandler);
-router.delete('/:id', deleteUserHandler);
+router.get('/', usersController.getUsersHandler);
+router.get('/:id', usersController.getUserbyIdHandler);
+
+router.post('/', validateSchema(insertUserSchema), usersController.createUserHandler);
+
+router.patch('/:id', validateSchema(insertUserSchema.partial()), usersController.updateUserHandler);
+
+router.delete('/:id', usersController.deleteUserHandler);
 
 export const usersRoutes = router;

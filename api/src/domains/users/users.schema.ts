@@ -21,5 +21,4 @@ export const usersRelations = relations(users, ({ many }) => ({
 }));
 
 export const insertUserSchema = createInsertSchema(users);
-
 export const selectUserSchema = createSelectSchema(users);

@@ -4,46 +4,23 @@ import { db } from '../../db/index';
 import { AppError } from '../../utils/AppError';
 import { hash } from 'argon2';
 
-export const createUser = async (payload: InferInsertModel<typeof users>) => {
-  const emailResults = await db.select().from(users).where(eq(users.email, payload.email));
-  if (emailResults.length)
-    throw new AppError(400, 'Unable to create user', {
-      email: 'email is already taken',
-    });
-
-  const hashedPassword = await hash(payload.password);
-  const results = await db
-    .insert(users)
-    .values({
-      ...payload,
-      password: hashedPassword,
-    })
-    .returning();
-
-  return results[0];
+const getColumnResults = {
+  id: users.id,
+  email: users.email,
+  username: users.username,
+  createdAt: users.createdAt,
+  updatedAt: users.updatedAt,
 };
 
 export const getUsers = async () => {
-  const results = await db
-    .select({
-      id: users.id,
-      email: users.email,
-      username: users.username,
-      createdAt: users.createdAt,
-      updatedAt: users.updatedAt,
-    })
-    .from(users);
+  const results = await db.select(getColumnResults).from(users);
   return results;
 };
 
 export const getUserById = async (id: string, includePassword: boolean = false) => {
   const results = await db
     .select({
-      id: users.id,
-      email: users.email,
-      username: users.username,
-      createdAt: users.createdAt,
-      updatedAt: users.updatedAt,
+      ...getColumnResults,
       ...(includePassword && {
         password: users.password,
       }),
@@ -57,11 +34,7 @@ export const getUserById = async (id: string, includePassword: boolean = false) 
 export const getUserByEmail = async (email: string, includePassword: boolean = false) => {
   const results = await db
     .select({
-      id: users.id,
-      email: users.email,
-      username: users.username,
-      createdAt: users.createdAt,
-      updatedAt: users.updatedAt,
+      ...getColumnResults,
       ...(includePassword && {
         password: users.password,
       }),
@@ -75,11 +48,7 @@ export const getUserByEmail = async (email: string, includePassword: boolean = f
 export const getUserByUsername = async (username: string, includePassword: boolean = false) => {
   const results = await db
     .select({
-      id: users.id,
-      email: users.email,
-      username: users.username,
-      createdAt: users.createdAt,
-      updatedAt: users.updatedAt,
+      ...getColumnResults,
       ...(includePassword && {
         password: users.password,
       }),
@@ -90,16 +59,30 @@ export const getUserByUsername = async (username: string, includePassword: boole
   return results[0];
 };
 
+export const createUser = async (payload: InferInsertModel<typeof users>) => {
+  const emailExists = await getUserByEmail(payload.email);
+  if (emailExists) throw new AppError(400, 'Unable to create user', { email: 'email is already taken' });
+
+  const userExists = await getUserByUsername(payload.username);
+  if (userExists)
+    throw new AppError(400, 'Unable to create user', {
+      email: 'username is already taken',
+    });
+
+  const hashedPassword = await hash(payload.password);
+
+  await db.insert(users).values({ ...payload, password: hashedPassword });
+
+  return { message: 'user created' };
+};
+
 export const updateUser = async (id: string, payload: InferInsertModel<typeof users>) => {
   const user = await getUserById(id);
-  if (!user) throw new AppError(404, 'user not found');
+  if (!user) throw new AppError(404, 'unable to update user', { id: 'user id not found' });
 
   await db
     .update(users)
-    .set({
-      ...user,
-      ...payload,
-    })
+    .set({ ...user, ...payload })
     .where(eq(users.id, id));
 
   return { message: 'user updated' };
@@ -107,7 +90,7 @@ export const updateUser = async (id: string, payload: InferInsertModel<typeof us
 
 export const deleteUser = async (id: string) => {
   const user = await getUserById(id);
-  if (!user) throw new AppError(404, 'user not found');
+  if (!user) throw new AppError(404, 'unable to delete user', { id: 'user id not found' });
 
   await db.delete(users).where(eq(users.id, id));
   return { message: 'user deleted' };

@@ -1,27 +1,47 @@
-import { asyncHandler } from '../../utils/asyncHandler';
 import { createUser, deleteUser, getUserById, getUsers, updateUser } from './users.service';
+import { Request, Response, NextFunction } from 'express';
 
-export const createUserHandler = asyncHandler(async (req) => {
-  const data = await createUser(req.body);
-  return data;
-});
+export const createUserHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = await createUser(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    return next(error);
+  }
+};
 
-export const getUsersHandler = asyncHandler(async () => {
-  const data = await getUsers();
-  return data;
-});
+export const getUsersHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = await getUsers();
+    return res.status(200).json(data);
+  } catch (error) {
+    return next(error);
+  }
+};
 
-export const getUserbyIdHandler = asyncHandler(async (req) => {
-  const data = await getUserById(req.params.id as string);
-  return data;
-});
+export const getUserbyIdHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = await getUserById(req.params.id as string);
+    return res.status(200).json(data);
+  } catch (error) {
+    return next(error);
+  }
+};
 
-export const updateUserHandler = asyncHandler(async (req) => {
-  const data = await updateUser(req.params.id as string, req.body);
-  return data;
-});
+export const updateUserHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = await updateUser(req.params.id as string, req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    return next(error);
+  }
+};
 
-export const deleteUserHandler = asyncHandler(async (req) => {
-  const data = await deleteUser(req.params.id as string);
-  return data;
-});
+export const deleteUserHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = await deleteUser(req.params.id as string);
+    return res.status(200).json(data);
+  } catch (error) {
+    return next(error);
+  }
+};

@@ -18,7 +18,7 @@ export const getRooms = async () => {
     .select({
       id: rooms.id,
       name: rooms.name,
-      userId: rooms.userId,
+      creatorId: rooms.creatorId,
     })
     .from(rooms);
   return results;
