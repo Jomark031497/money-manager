@@ -71,9 +71,12 @@ export const createUser = async (payload: InferInsertModel<typeof users>) => {
 
   const hashedPassword = await hash(payload.password);
 
-  await db.insert(users).values({ ...payload, password: hashedPassword });
+  const queryResults = await db
+    .insert(users)
+    .values({ ...payload, password: hashedPassword })
+    .returning();
 
-  return { message: 'user created' };
+  return queryResults[0];
 };
 
 export const updateUser = async (id: string, payload: InferInsertModel<typeof users>) => {

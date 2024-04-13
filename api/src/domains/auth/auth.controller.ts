@@ -8,8 +8,7 @@ export const signUpHandler = async (req: Request, res: Response, next: NextFunct
     return res
       .appendHeader('Set-Cookie', lucia.createSessionCookie(data.session.id).serialize())
       .status(200)
-      .json(data.user)
-      .end();
+      .json(data.user);
   } catch (error) {
     return next(error);
   }
@@ -21,8 +20,7 @@ export const loginHandler = async (req: Request, res: Response, next: NextFuncti
     return res
       .appendHeader('Set-Cookie', lucia.createSessionCookie(data.session.id).serialize())
       .status(200)
-      .json(data.user)
-      .end();
+      .json(data.user);
   } catch (error) {
     return next(error);
   }
@@ -31,13 +29,9 @@ export const loginHandler = async (req: Request, res: Response, next: NextFuncti
 export const signOutHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await signOut(res.locals.sessionId);
-    return res
-      .setHeader('Set-Cookie', lucia.createBlankSessionCookie().serialize())
-      .status(200)
-      .json({
-        message: 'sign out success',
-      })
-      .end();
+    return res.setHeader('Set-Cookie', lucia.createBlankSessionCookie().serialize()).status(200).json({
+      message: 'sign out success',
+    });
   } catch (error) {
     return next(error);
   }

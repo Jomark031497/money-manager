@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { validateSchema } from '../../middlewares/validateSchema';
-import { insertUserSchema, selectUserSchema } from '../users/users.schema';
+import { insertUserSchema } from '../users/users.schema';
 import { currentSessionHandler, loginHandler, signOutHandler, signUpHandler } from './auth.controller';
 import { validateSession } from '../../middlewares/validateSession';
 
@@ -11,17 +11,13 @@ router.post('/sign-up', validateSchema(insertUserSchema), signUpHandler);
 router.post(
   '/login',
   validateSchema(
-    selectUserSchema.pick({
+    insertUserSchema.pick({
       username: true,
       password: true,
     }),
   ),
   loginHandler,
 );
-
-router.get('/protected', validateSession, (req, res) => {
-  return res.send('Hello World!');
-});
 
 router.delete('/sign-out', validateSession, signOutHandler);
 

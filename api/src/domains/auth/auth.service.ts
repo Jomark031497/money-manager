@@ -8,30 +8,36 @@ import { excludeFields } from '../../utils/excludeFields';
 
 export const signUp = async (payload: InferInsertModel<typeof users>) => {
   const user = await createUser(payload);
-  if (!user) throw new AppError(404, 'failed to create user');
+  if (!user) throw new AppError(404, 'sign up failed');
 
   const session = await lucia.createSession(user.id, {});
 
   return {
     session,
-    user,
+    user: excludeFields(user, ['password']),
   };
 };
 
 export const login = async (payload: Pick<InferSelectModel<typeof users>, 'username' | 'password'>) => {
   const user = await getUserByUsername(payload.username, true);
-  if (!user || !user.password) throw new AppError(404, 'invalid username/password');
+  if (!user || !user.password)
+    throw new AppError(404, 'login failed', {
+      username: 'invalid username',
+      password: 'invalid password',
+    });
 
   const validPassword = await verify(user.password, payload.password);
-  if (!validPassword) throw new AppError(404, 'invalid username/password');
+  if (!validPassword)
+    throw new AppError(404, 'login failed', {
+      username: 'invalid username',
+      password: 'invalid password',
+    });
 
   const session = await lucia.createSession(user.id, {});
 
-  const omittedPasswordUser = excludeFields(user, ['password']);
-
   return {
     session,
-    user: omittedPasswordUser,
+    user: excludeFields(user, ['password']),
   };
 };
 
