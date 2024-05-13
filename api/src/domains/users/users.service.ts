@@ -8,6 +8,7 @@ const getColumnResults = {
   id: users.id,
   email: users.email,
   username: users.username,
+  role: users.role,
   createdAt: users.createdAt,
   updatedAt: users.updatedAt,
 };
